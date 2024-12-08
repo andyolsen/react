@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple State Management Example (Class Components)</title>
+    <style>
+        body {
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+        }
+    </style>
+</head>
+<body>
+
+	<div id="root"></div>
+
+	<script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+
+	<script type="importmap">
+	{
+		"imports": {
+			"react": "https://esm.sh/react",
+			"react-dom/client": "https://esm.sh/react-dom/client"
+		}
+	}
+	</script>
+	
+	<script data-type="module" type="text/babel">
+		import React from "react"
+		import { createRoot } from "react-dom/client"
+
+		class HitCounter extends React.Component {
+
+			constructor(props) {
+				super(props)
+				this.state = {
+					hitCount: 0,
+					lastUpdated: new Date()
+				}
+			}
+
+			onClickHandler() {
+				this.setState({
+					hitCount: this.state.hitCount+1, 
+					lastUpdated: new Date()
+				})
+			}
+
+			render() {
+				return (
+					<>
+						<h1>Simple state management (class components)</h1>
+						<div>
+							<button onClick={() => this.onClickHandler()}>Click me</button>
+							<p>Hit count:    <b>{this.state.hitCount}</b></p>
+							<p>Last updated: <b>{this.state.lastUpdated.toLocaleTimeString()}</b></p>
+						</div>
+					</>
+				)
+			}
+		}
+
+		const root = createRoot(document.getElementById('root'))
+		root.render(<HitCounter/>)
+
+	</script>
+
+</body>
+</html>

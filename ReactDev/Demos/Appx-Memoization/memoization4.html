@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memoization 4</title>
+	<style>
+		body {font-family: Consolas;}
+		.panel {background:#0677bb; color:white; margin-top:10px; padding-left:5px; padding-bottom:5px;}
+	</style>
+</head>
+<body>
+
+	<div id="root"></div>
+
+	<script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+
+	<script type="importmap">
+	{
+		"imports": {
+			"react": "https://esm.sh/react",
+			"react-dom/client": "https://esm.sh/react-dom/client"
+		}
+	}
+	</script>
+	
+	<script data-type="module" type="text/babel">
+		import React from "react"
+		import { createRoot } from "react-dom/client"
+
+		function Panel({title, text}) {
+			let count = React.useRef(0)
+			console.log(`Rendered at ${new Date().toString()}`)
+			
+			// Cache a particular piece of content.
+			const firstRendered = React.useMemo(() => <div>Initial: {new Date().toString()}</div>, [])
+		
+			return (
+				<div className="panel">
+					<h2>{title}</h2>
+					<div>Painted: {count.current++} times</div>
+					<div>Textbox: {text}</div>
+					{firstRendered}
+					<div>Updated: {new Date().toString()}</div>
+				</div>
+			)
+		}
+
+		const MemoizedPanel = React.memo(Panel)
+
+		const MemoizedPanelWithComparisonFunction = React.memo(
+			Panel, 
+			(prevProps, nextProps) => prevProps.text.length == nextProps.text.length
+		)
+		
+		function App() {
+			const [text, setText] = React.useState('')
+			return (
+				<div>
+					<input value={text} placeholder="Enter text here" onChange={e => setText(e.target.value)} />
+					<Panel title="Normal panel" text={text}/>
+					<MemoizedPanel title="Memoized panel" text={text} />
+					<MemoizedPanelWithComparisonFunction title="Memoized panel with comparison function" text={text} />
+				</div>	
+			)
+		}
+		
+		const root = createRoot(document.getElementById('root'))
+		root.render(<App/>)
+
+	</script>
+
+</body>
+</html>
